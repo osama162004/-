@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مذكراتي الذهبية</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+        
+        :root {
+            --gold: #D4AF37;
+            --dark-gold: #996515;
+            --light-gold: #F5D98F;
+            --bg-color: #1A1A1A;
+            --text-color: #F0F0F0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Tajawal', sans-serif;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 20px;
+            background-image: radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.05) 90%);
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            border: 1px solid var(--gold);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+            background: linear-gradient(135deg, rgba(26, 26, 26, 0.9) 0%, rgba(40, 40, 40, 0.9) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--gold), var(--dark-gold), var(--gold));
+        }
+        
+        h1 {
+            text-align: center;
+            color: var(--gold);
+            margin-bottom: 30px;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        h1::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 30%;
+            right: 30%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        button {
+            background: linear-gradient(135deg, var(--gold), var(--dark-gold));
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        .date-time {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            color: var(--light-gold);
+            font-size: 18px;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--gold);
+            background-color: rgba(0, 0, 0, 0.3);
+            color: var(--text-color);
+            font-size: 16px;
+            margin-bottom: 20px;
+            resize: vertical;
+            transition: border 0.3s ease;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border: 1px solid var(--light-gold);
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+        
+        .entries-container {
+            display: none;
+            margin-top: 30px;
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+            padding-top: 20px;
+        }
+        
+        .entry {
+            background: rgba(40, 40, 40, 0.7);
+            border-left: 3px solid var(--gold);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 0 8px 8px 0;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        
+        .entry:hover {
+            transform: translateX(5px);
+        }
+        
+        .entry-date {
+            color: var(--gold);
+            font-weight: 500;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .entry-content {
+            line-height: 1.6;
+        }
+        
+        .delete-btn {
+            background: linear-gradient(135deg, #ff3333, #990000);
+            color: white;
+            padding: 5px 10px;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        
+        .gold-icon {
+            color: var(--gold);
+        }
+        
+        @media (max-width: 600px) {
+            .controls {
+                flex-direction: column;
+            }
+            
+            .date-time {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>مذكراتي الذهبية ✨</h1>
+        
+        <div class="controls">
+            <button id="saveBtn">
+                <span class="gold-icon">💾</span> حفظ اليوم
+            </button>
+            <button id="showEntriesBtn">
+                <span class="gold-icon">📚</span> المحفوظات
+            </button>
+            <button id="newEntryBtn" style="display: none;">
+                <span class="gold-icon">✏️</span> كتابة جديدة
+            </button>
+        </div>
+        
+        <div class="date-time">
+            <div id="currentDate">اليوم: ...</div>
+            <div id="currentTime">الوقت: ...</div>
+        </div>
+        
+        <textarea id="diaryEntry" placeholder="اكتب مذكراتك اليومية هنا... شاركنا أفكارك، مشاعرك، والأحداث المهمة في يومك"></textarea>
+        
+        <div id="entriesContainer" class="entries-container">
+            <h2 style="color: var(--gold); margin-bottom: 15px; text-align: center;">محفوظاتي</h2>
+            <div id="entriesList"></div>
+        </div>
+    </div>
+
+    <script>
+        // عناصر DOM
+        const diaryEntry = document.getElementById('diaryEntry');
+        const saveBtn = document.getElementById('saveBtn');
+        const showEntriesBtn = document.getElementById('showEntriesBtn');
+        const newEntryBtn = document.getElementById('newEntryBtn');
+        const entriesContainer = document.getElementById('entriesContainer');
+        const entriesList = document.getElementById('entriesList');
+        const currentDateElement = document.getElementById('currentDate');
+        const currentTimeElement = document.getElementById('currentTime');
+        
+        // تحديث التاريخ والوقت
+        function updateDateTime() {
+            const now = new Date();
+            
+            // التاريخ الهجري (تقريبي)
+            const hijriDate = getHijriDate(now);
+            
+            // التاريخ الميلادي
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const gregorianDate = now.toLocaleDateString('ar-SA', options);
+            
+            // الوقت
+            const time = now.toLocaleTimeString('ar-SA');
+            
+            currentDateElement.textContent = `اليوم: ${hijriDate} (${gregorianDate})`;
+            currentTimeElement.textContent = `الوقت: ${time}`;
+        }
+        
+        // دالة للحصول على التاريخ الهجري (تقريبي)
+        function getHijriDate(gregorianDate) {
+            const hijriMonths = [
+                'محرم', 'صفر', 'ربيع الأول', 'ربيع الثاني', 
+                'جمادى الأولى', 'جمادى الآخرة', 'رجب', 'شعبان', 
+                'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'
+            ];
+            
+            // تحويل تقريبي (ليس دقيقاً)
+            const hijriYear = Math.floor((gregorianDate.getFullYear() - 622) * (33 / 32));
+            const hijriMonth = hijriMonths[gregorianDate.getMonth()];
+            const hijriDay = gregorianDate.getDate();
+            
+            return `${hijriDay} ${hijriMonth} ${hijriYear} هـ`;
+        }
+        
+        // تحديث التاريخ والوقت كل ثانية
+        updateDateTime();
+        setInterval(updateDateTime, 1000);
+        
+        // تحميل المحفوظات عند فتح الصفحة
+        function loadEntries() {
+            const entries = JSON.parse(localStorage.getItem('diaryEntries')) || [];
+            return entries;
+        }
+        
+        // حفظ المدخلات
+        function saveEntry() {
+            const entryText = diaryEntry.value.trim();
+            if (!entryText) {
+                alert('الرجاء كتابة شيء قبل الحفظ');
+                return;
+            }
+            
+            const now = new Date();
+            const entry = {
+                id: now.getTime(),
+                date: currentDateElement.textContent,
+                time: currentTimeElement.textContent,
+                content: entryText,
+                timestamp: now.toISOString()
+            };
+            
+            const entries = loadEntries();
+            entries.unshift(entry); // إضافة في البداية لعرض الأحدث أولاً
+            
+            localStorage.setItem('diaryEntries', JSON.stringify(entries));
+            diaryEntry.value = '';
+            
+            alert('تم حفظ المذكرة بنجاح!');
+        }
+        
+        // عرض المحفوظات
+        function displayEntries() {
+            const entries = loadEntries();
+            entriesList.innerHTML = '';
+            
+            if (entries.length === 0) {
+                entriesList.innerHTML = '<p style="text-align: center; color: var(--light-gold);">لا توجد مذكرات محفوظة بعد</p>';
+                return;
+            }
+            
+            entries.forEach(entry => {
+                const entryElement = document.createElement('div');
+                entryElement.className = 'entry';
+                entryElement.innerHTML = `
+                    <div class="entry-date">
+                        <span>${entry.date}</span>
+                        <span>${entry.time}</span>
+                    </div>
+                    <div class="entry-content">${entry.content}</div>
+                    <button class="delete-btn" data-id="${entry.id}">حذف</button>
+                `;
+                entriesList.appendChild(entryElement);
+            });
+            
+            // إضافة مستمعي الأحداث لأزرار الحذف
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const id = parseInt(this.getAttribute('data-id'));
+                    deleteEntry(id);
+                });
+            });
+        }
+        
+        // حذف مدخل
+        function deleteEntry(id) {
+            if (confirm('هل أنت متأكد من حذف هذه المذكرة؟')) {
+                const entries = loadEntries();
+                const filteredEntries = entries.filter(entry => entry.id !== id);
+                localStorage.setItem('diaryEntries', JSON.stringify(filteredEntries));
+                displayEntries();
+            }
+        }
+        
+        // مستمعي الأحداث
+        saveBtn.addEventListener('click', saveEntry);
+        
+        showEntriesBtn.addEventListener('click', function() {
+            diaryEntry.style.display = 'none';
+            saveBtn.style.display = 'none';
+            entriesContainer.style.display = 'block';
+            newEntryBtn.style.display = 'block';
+            displayEntries();
+        });
+        
+        newEntryBtn.addEventListener('click', function() {
+            diaryEntry.style.display = 'block';
+            saveBtn.style.display = 'block';
+            entriesContainer.style.display = 'none';
+            newEntryBtn.style.display = 'none';
+            diaryEntry.focus();
+        });
+    </script>
+</body>
+</html>
